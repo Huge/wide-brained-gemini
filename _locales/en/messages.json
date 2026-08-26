@@ -1,0 +1,116 @@
+{
+  "appName": {
+    "message": "Wider Gemini"
+  },
+  "appDesc": {
+    "message": "Make Google Gemini wider, denser, and easier to read with responsive width, reading density controls, and code wrapping."
+  },
+  "headerSubtitle": {
+    "message": "Make the conversation interface wider and more comfortable"
+  },
+  "widthLabel": {
+    "message": "Chat Width"
+  },
+  "widthMin": {
+    "message": "Min width"
+  },
+  "widthMax": {
+    "message": "Max width"
+  },
+  "btnNarrow": {
+    "message": "Narrow"
+  },
+  "btnDefault": {
+    "message": "Default"
+  },
+  "btnWider": {
+    "message": "Wider"
+  },
+  "btnUltra": {
+    "message": "Ultra"
+  },
+  "btnInsane": {
+    "message": "Insane"
+  },
+  "editPresets": {
+    "message": "Edit presets"
+  },
+  "donePresets": {
+    "message": "Done"
+  },
+  "cancelPresets": {
+    "message": "Cancel"
+  },
+  "managePresets": {
+    "message": "Manage presets"
+  },
+  "managePresetsSummary": {
+    "message": "5 presets customized"
+  },
+  "resetToDefault": {
+    "message": "Reset to default"
+  },
+  "clampedHint": {
+    "message": "Clamped to range"
+  },
+  "codeWrapLabel": {
+    "message": "Code Auto Wrap"
+  },
+  "userFullWidthLabel": {
+    "message": "User Message Full Width"
+  },
+  "statusOn": {
+    "message": "On"
+  },
+  "statusOff": {
+    "message": "Off"
+  },
+  "infoText1": {
+    "message": "Drag the slider or click preset buttons to adjust width"
+  },
+  "infoText2": {
+    "message": "Settings are automatically saved and applied to all Gemini tabs"
+  },
+  "refreshing": {
+    "message": "Refreshing page..."
+  },
+  "widthUnit": {
+    "message": "Width unit"
+  },
+  "densityLabel": {
+    "message": "Reading density"
+  },
+  "compactnessUnit": {
+    "message": "%"
+  },
+  "advancedDensity": {
+    "message": "Advanced spacing"
+  },
+  "lineHeightLabel": {
+    "message": "Line height"
+  },
+  "paragraphSpacingLabel": {
+    "message": "Paragraph spacing"
+  },
+  "fontSizeLabel": {
+    "message": "Font size"
+  },
+  "resetFontSize": {
+    "message": "Reset font size"
+  },
+  "resetDensity": {
+    "message": "Reset spacing"
+  },
+  "customSpacing": {
+    "message": "Custom"
+  },
+  "autoSpacing": {
+    "message": "Auto"
+  },
+  "uiLanguageLabel": {
+    "message": "Language"
+  },
+  "uiLanguageAuto": {
+    "message": "Follow system"
+  }
+}

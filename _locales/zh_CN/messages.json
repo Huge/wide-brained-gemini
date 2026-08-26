@@ -1,0 +1,116 @@
+{
+  "appName": {
+    "message": "Wider Gemini"
+  },
+  "appDesc": {
+    "message": "让 Google Gemini 支持更宽对话区域、百分比宽度、阅读密度调节和代码自动换行，提升大屏阅读体验。"
+  },
+  "headerSubtitle": {
+    "message": "让对话界面更宽更舒适"
+  },
+  "widthLabel": {
+    "message": "对话区域宽度"
+  },
+  "widthMin": {
+    "message": "最小宽度"
+  },
+  "widthMax": {
+    "message": "最大宽度"
+  },
+  "btnNarrow": {
+    "message": "窄"
+  },
+  "btnDefault": {
+    "message": "默认"
+  },
+  "btnWider": {
+    "message": "更宽"
+  },
+  "btnUltra": {
+    "message": "超宽"
+  },
+  "btnInsane": {
+    "message": "你真的需要这么宽吗？"
+  },
+  "editPresets": {
+    "message": "编辑预设"
+  },
+  "donePresets": {
+    "message": "完成"
+  },
+  "cancelPresets": {
+    "message": "取消"
+  },
+  "managePresets": {
+    "message": "管理预设"
+  },
+  "managePresetsSummary": {
+    "message": "已自定义 5 个预设"
+  },
+  "resetToDefault": {
+    "message": "重置为默认"
+  },
+  "clampedHint": {
+    "message": "已限制在范围内"
+  },
+  "codeWrapLabel": {
+    "message": "代码区域自动换行"
+  },
+  "userFullWidthLabel": {
+    "message": "用户消息铺满宽度"
+  },
+  "statusOn": {
+    "message": "开启"
+  },
+  "statusOff": {
+    "message": "关闭"
+  },
+  "infoText1": {
+    "message": "拖动滑块或点击预设按钮调整宽度"
+  },
+  "infoText2": {
+    "message": "设置会自动保存并应用到所有 Gemini 标签页"
+  },
+  "refreshing": {
+    "message": "正在刷新页面..."
+  },
+  "widthUnit": {
+    "message": "宽度单位"
+  },
+  "densityLabel": {
+    "message": "阅读密度"
+  },
+  "compactnessUnit": {
+    "message": "%"
+  },
+  "advancedDensity": {
+    "message": "高级间距"
+  },
+  "lineHeightLabel": {
+    "message": "行高"
+  },
+  "paragraphSpacingLabel": {
+    "message": "段落间距"
+  },
+  "fontSizeLabel": {
+    "message": "字号"
+  },
+  "resetFontSize": {
+    "message": "重置字号"
+  },
+  "resetDensity": {
+    "message": "重置间距"
+  },
+  "customSpacing": {
+    "message": "自定义"
+  },
+  "autoSpacing": {
+    "message": "自动"
+  },
+  "uiLanguageLabel": {
+    "message": "界面语言"
+  },
+  "uiLanguageAuto": {
+    "message": "跟随系统"
+  }
+}
