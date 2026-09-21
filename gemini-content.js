@@ -122,6 +122,106 @@
         }
     }
 
+    let isTogglingExtendedThinking = false;
+    let lastExtendedThinkingAttempt = 0;
+    let extendedThinkingFailureCount = 0;
+
+    function getModelPickerButton() {
+        return document.querySelector('button.input-area-switch') ||
+               document.querySelector('button[data-test-id="bard-mode-menu-button"]') ||
+               document.querySelector('button[aria-label*="mode picker" i]') ||
+               document.querySelector('button[aria-label*="model" i]');
+    }
+
+    function isExtendedThinkingActive() {
+        const button = getModelPickerButton();
+        if (!button) return false;
+
+        const ariaLabel = (button.getAttribute('aria-label') || '').toLowerCase();
+        const text = (button.innerText || '').toLowerCase();
+
+        return ariaLabel.includes('extended') || text.includes('extended');
+    }
+
+    function isGeminiMenuOpen() {
+        const menu = document.querySelector('gem-menu[data-test-id="gem-mode-menu"]') ||
+                     document.querySelector('gem-menu');
+        if (!menu) return false;
+        if (menu.getAttribute('data-visible') === 'false') return false;
+        const rect = menu.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && window.getComputedStyle(menu).display !== 'none';
+    }
+
+    function ensureExtendedThinking(force) {
+        if (!isExtensionContextValid()) return;
+
+        const isEnabled = force !== undefined ? force : Boolean(currentRangeSettings && currentRangeSettings.alwaysExtendedThinking);
+        if (!isEnabled) return;
+
+        if (isTogglingExtendedThinking) return;
+
+        const now = Date.now();
+        if (now - lastExtendedThinkingAttempt < 2000) return;
+
+        if (extendedThinkingFailureCount >= 3) return;
+
+        const button = getModelPickerButton();
+        if (!button) return;
+
+        if (isExtendedThinkingActive()) {
+            extendedThinkingFailureCount = 0;
+            return;
+        }
+
+        isTogglingExtendedThinking = true;
+        lastExtendedThinkingAttempt = now;
+
+        document.body.classList.add('wider-gemini-silent-toggle');
+        const alreadyOpen = isGeminiMenuOpen();
+
+        if (!alreadyOpen) {
+            button.click();
+        }
+
+        setTimeout(() => {
+            try {
+                const items = Array.from(document.querySelectorAll('gem-menu-item'));
+                const extendedItem = items.find(item => {
+                    const content = (item.textContent || '').toLowerCase();
+                    return content.includes('extended thinking') ||
+                           content.includes('complex problem solving') ||
+                           content.includes('extended');
+                });
+
+                if (extendedItem) {
+                    const isSelected = extendedItem.classList.contains('selected') ||
+                                       extendedItem.getAttribute('aria-checked') === 'true' ||
+                                       extendedItem.querySelector('.selected, [aria-checked="true"]') !== null;
+
+                    if (!isSelected) {
+                        extendedItem.click();
+                        console.log('[Wider Gemini] Successfully toggled Extended thinking ON');
+                    }
+                    extendedThinkingFailureCount = 0;
+                } else {
+                    console.log('[Wider Gemini] Extended thinking option not found in menu');
+                    extendedThinkingFailureCount++;
+                }
+            } catch (err) {
+                console.error('[Wider Gemini] Error toggling Extended thinking:', err);
+                extendedThinkingFailureCount++;
+            } finally {
+                setTimeout(() => {
+                    if (!alreadyOpen && isGeminiMenuOpen()) {
+                        button.click();
+                    }
+                    document.body.classList.remove('wider-gemini-silent-toggle');
+                    isTogglingExtendedThinking = false;
+                }, 80);
+            }
+        }, 120);
+    }
+
     function updateCurrentRangeSettings(ranges) {
         if (!ranges || typeof ranges !== 'object') return;
         currentRangeSettings = settingsUtils.normalizeStorage({
@@ -224,6 +324,7 @@
                 'chatWidthSetting',
                 'codeWrap',
                 'userFullWidth',
+                'alwaysExtendedThinking',
                 'widthMin',
                 'widthMax',
                 'widthPercentMin',
@@ -241,6 +342,9 @@
                 applyCodeWrap(settings.codeWrap);
                 applyUserFullWidth(settings.userFullWidth);
                 applyDensitySettings(settings);
+                if (settings.alwaysExtendedThinking) {
+                    setTimeout(() => ensureExtendedThinking(), 300);
+                }
             });
         } catch (e) {
             console.log('[Wider Gemini] Failed to get storage:', e.message);
@@ -263,6 +367,12 @@
             } else if (request.action === 'updateUserFullWidth') {
                 applyUserFullWidth(request.enabled);
                 sendResponse({ success: true });
+            } else if (request.action === 'updateAlwaysExtendedThinking') {
+                currentRangeSettings.alwaysExtendedThinking = request.enabled;
+                if (request.enabled) {
+                    ensureExtendedThinking(true);
+                }
+                sendResponse({ success: true });
             } else if (request.action === 'updateDensity') {
                 applyDensitySettings(settingsUtils.normalizeStorage(request.settings || {}));
                 sendResponse({ success: true });
@@ -276,7 +386,11 @@
         const urlChangeHandler = function () {
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
+                extendedThinkingFailureCount = 0;
                 applySettings();
+                setTimeout(() => {
+                    ensureExtendedThinking();
+                }, 400);
             }
         };
 
@@ -313,15 +427,19 @@
 
                             if (classList.contains('conversation-container') ||
                                 classList.contains('input-area-container') ||
+                                classList.contains('input-area-switch') ||
                                 classList.contains('upload-card') ||
                                 classList.contains('file-drop-area') ||
                                 tagName === 'user-query' ||
                                 tagName === 'input-container' ||
+                                tagName === 'input-area-v2' ||
                                 tagName === 'upload-card' ||
                                 tagName === 'file-drop-area' ||
                                 node.querySelector?.('.conversation-container') ||
                                 node.querySelector?.('user-query') ||
                                 node.querySelector?.('.input-area-container') ||
+                                node.querySelector?.('.input-area-switch') ||
+                                node.querySelector?.('input-area-v2') ||
                                 node.querySelector?.('upload-card') ||
                                 node.querySelector?.('.upload-card') ||
                                 node.querySelector?.('file-drop-area') ||
@@ -342,6 +460,9 @@
 
             if (shouldUpdate) {
                 applySettings();
+                if (currentRangeSettings && currentRangeSettings.alwaysExtendedThinking && !isExtendedThinkingActive()) {
+                    ensureExtendedThinking();
+                }
             }
         });
 

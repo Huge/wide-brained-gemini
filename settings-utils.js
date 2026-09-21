@@ -43,6 +43,7 @@
         presets: DEFAULT_PRESETS_BY_UNIT[UNIT_PX],
         codeWrap: false,
         userFullWidth: false,
+        alwaysExtendedThinking: true,
         messageCompactness: 0,
         messageLineHeight: DENSITY_DEFAULT_LINE_HEIGHT,
         messageParagraphSpacing: DENSITY_DEFAULT_PARAGRAPH_SPACING,
@@ -264,6 +265,9 @@
         const userFullWidth = source.userFullWidth !== undefined
             ? source.userFullWidth === true
             : DEFAULTS.userFullWidth;
+        const alwaysExtendedThinking = source.alwaysExtendedThinking !== undefined
+            ? source.alwaysExtendedThinking === true
+            : DEFAULTS.alwaysExtendedThinking;
 
         return {
             ...ranges,
@@ -273,6 +277,7 @@
             presets,
             codeWrap,
             userFullWidth,
+            alwaysExtendedThinking,
             messageFontSize: normalizeFontSize(source.messageFontSize),
             uiLanguage: normalizeUiLanguage(source.uiLanguage),
             ...density

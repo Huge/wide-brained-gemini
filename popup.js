@@ -35,7 +35,7 @@ function localizeHtmlPage() {
         "btnNarrow", "btnDefault", "btnWider", "btnUltra", "btnInsane",
         "editPresets", "donePresets", "cancelPresets", "managePresets", "managePresetsSummary", "resetToDefault",
         "codeWrapLabel", "infoText1", "infoText2", "refreshing",
-        "userFullWidthLabel",
+        "userFullWidthLabel", "alwaysExtendedThinkingLabel",
         "widthUnit", "densityLabel", "compactnessUnit", "advancedDensity",
         "lineHeightLabel", "paragraphSpacingLabel", "resetDensity",
         "fontSizeLabel", "resetFontSize",
@@ -365,6 +365,8 @@ const codeWrapToggle = document.getElementById('codeWrapToggle');
 const codeWrapStatus = document.getElementById('codeWrapStatus');
 const userFullWidthToggle = document.getElementById('userFullWidthToggle');
 const userFullWidthStatus = document.getElementById('userFullWidthStatus');
+const alwaysExtendedThinkingToggle = document.getElementById('alwaysExtendedThinkingToggle');
+const alwaysExtendedThinkingStatus = document.getElementById('alwaysExtendedThinkingStatus');
 const uiLanguageSelect = document.getElementById('uiLanguageSelect');
 const refreshNotice = document.getElementById('refreshNotice');
 
@@ -471,6 +473,7 @@ chrome.storage.sync.get([
     'chatWidthSetting',
     'codeWrap',
     'userFullWidth',
+    'alwaysExtendedThinking',
     'widthMin',
     'widthMax',
     'widthPercentMin',
@@ -489,7 +492,8 @@ chrome.storage.sync.get([
         result.chatWidthSetting === undefined ||
         result.widthPercentMin === undefined ||
         result.widthPercentMax === undefined ||
-        result.presetsByUnit === undefined
+        result.presetsByUnit === undefined ||
+        result.alwaysExtendedThinking === undefined
     );
 
     if (needsWrite) {
@@ -502,6 +506,7 @@ chrome.storage.sync.get([
             widthPercentMax: settings.widthPercentMax,
             presetsByUnit: settings.presetsByUnit,
             presets: settings.presetsByUnit[settingsUtils.UNIT_PX],
+            alwaysExtendedThinking: settings.alwaysExtendedThinking,
             messageCompactness: settings.messageCompactness,
             messageLineHeight: settings.messageLineHeight,
             messageParagraphSpacing: settings.messageParagraphSpacing,
@@ -525,6 +530,8 @@ chrome.storage.sync.get([
         updateCodeWrapStatus(settings.codeWrap);
         userFullWidthToggle.checked = settings.userFullWidth;
         updateUserFullWidthStatus(settings.userFullWidth);
+        alwaysExtendedThinkingToggle.checked = settings.alwaysExtendedThinking;
+        updateAlwaysExtendedThinkingStatus(settings.alwaysExtendedThinking);
     });
 });
 
@@ -761,6 +768,12 @@ userFullWidthToggle.addEventListener('change', function () {
     updateUserFullWidth(enabled);
 });
 
+alwaysExtendedThinkingToggle.addEventListener('change', function () {
+    const enabled = this.checked;
+    updateAlwaysExtendedThinkingStatus(enabled);
+    updateAlwaysExtendedThinking(enabled);
+});
+
 uiLanguageSelect.addEventListener('change', function () {
     const language = settingsUtils.normalizeUiLanguage(this.value);
     chrome.storage.sync.set({ uiLanguage: language }, function () {
@@ -779,6 +792,12 @@ function updateUserFullWidthStatus(enabled) {
     const statusOn = t("statusOn", "On");
     const statusOff = t("statusOff", "Off");
     userFullWidthStatus.textContent = enabled ? statusOn : statusOff;
+}
+
+function updateAlwaysExtendedThinkingStatus(enabled) {
+    const statusOn = t("statusOn", "On");
+    const statusOff = t("statusOff", "Off");
+    alwaysExtendedThinkingStatus.textContent = enabled ? statusOn : statusOff;
 }
 
 function updateWidthSetting(setting) {
@@ -897,6 +916,23 @@ function updateUserFullWidth(enabled) {
             setTimeout(() => {
                 chrome.tabs.reload(tab.id);
             }, 100);
+        });
+    });
+}
+
+function updateAlwaysExtendedThinking(enabled) {
+    chrome.storage.sync.set({ alwaysExtendedThinking: enabled });
+
+    chrome.tabs.query({ url: 'https://gemini.google.com/*' }, function (tabs) {
+        if (tabs.length === 0) return;
+
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, {
+                action: 'updateAlwaysExtendedThinking',
+                enabled: enabled
+            }).catch(err => {
+                // Ignore error
+            });
         });
     });
 }

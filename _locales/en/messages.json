@@ -59,6 +59,9 @@
   "userFullWidthLabel": {
     "message": "User Message Full Width"
   },
+  "alwaysExtendedThinkingLabel": {
+    "message": "Always Extended Thinking"
+  },
   "statusOn": {
     "message": "On"
   },

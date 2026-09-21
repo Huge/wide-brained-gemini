@@ -11,6 +11,7 @@ A modern Chrome Extension (Manifest V3) that widens and enhances the [Google Gem
 - 📖 **Reading Density & Typography**: Adjust line heights, paragraph spacing, and scalable message font sizes.
 - 💻 **Code Auto-Wrap**: Wrap long code blocks without horizontal scrolling.
 - 🔲 **Full-Width User Messages**: Let user queries span the entire conversation width.
+- 🧠 **Always Extended Thinking**: Automatically keep Extended Thinking mode active for deep reasoning.
 - 🛡️ **Security Hardened**: Safe DOM construction and sanitized preset rendering under Chrome Manifest V3.
 
 ---

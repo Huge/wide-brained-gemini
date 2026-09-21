@@ -59,6 +59,9 @@
   "userFullWidthLabel": {
     "message": "用户消息铺满宽度"
   },
+  "alwaysExtendedThinkingLabel": {
+    "message": "默认开启深度思考"
+  },
   "statusOn": {
     "message": "开启"
   },

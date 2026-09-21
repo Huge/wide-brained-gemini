@@ -505,3 +505,11 @@ body:not(.code-wrap-enabled) .code-container.formatted {
     white-space: pre !important;
     overflow-x: auto !important;
 }
+
+/* Silent toggle for Extended Thinking */
+body.wider-gemini-silent-toggle gem-menu {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
