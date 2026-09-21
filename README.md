@@ -1,6 +1,6 @@
-# Wide Brained Gemini 🧠✨
+# Wiser & Wider Gemini (Wide Brained Gemini) 🧠✨
 
-A modern Chrome Extension (Manifest V3) that widens and enhances the [Google Gemini](https://gemini.google.com/) web interface for maximum productivity and readable, comfortable chat views.
+A modern Chrome Extension (Manifest V3) that empowers [Google Gemini](https://gemini.google.com/) with always-on Extended Thinking (deep reasoning) and an expansive, readable, and comfortable chat interface.
 
 ---
 

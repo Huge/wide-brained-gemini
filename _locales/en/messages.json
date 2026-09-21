@@ -1,12 +1,12 @@
 {
   "appName": {
-    "message": "Wider Gemini"
+    "message": "Wiser & Wider Gemini"
   },
   "appDesc": {
-    "message": "Make Google Gemini wider, denser, and easier to read with responsive width, reading density controls, and code wrapping."
+    "message": "Make Google Gemini wiser and wider with always-on Extended Thinking, responsive chat width, reading density controls, and code wrapping."
   },
   "headerSubtitle": {
-    "message": "Make the conversation interface wider and more comfortable"
+    "message": "Deeper thinking, wider views, effortless reading"
   },
   "widthLabel": {
     "message": "Chat Width"

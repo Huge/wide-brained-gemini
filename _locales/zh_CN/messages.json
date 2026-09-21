@@ -1,12 +1,12 @@
 {
   "appName": {
-    "message": "Wider Gemini"
+    "message": "Wiser & Wider Gemini"
   },
   "appDesc": {
-    "message": "让 Google Gemini 支持更宽对话区域、百分比宽度、阅读密度调节和代码自动换行，提升大屏阅读体验。"
+    "message": "通过默认深度思考、更宽对话区域、阅读密度调节与代码换行，让 Google Gemini 更聪明、更宽阔、更易读。"
   },
   "headerSubtitle": {
-    "message": "让对话界面更宽更舒适"
+    "message": "更深思考，更宽视野，舒适阅读"
   },
   "widthLabel": {
     "message": "对话区域宽度"
