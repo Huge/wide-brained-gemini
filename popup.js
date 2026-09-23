@@ -36,6 +36,7 @@ function localizeHtmlPage() {
         "editPresets", "donePresets", "cancelPresets", "managePresets", "managePresetsSummary", "resetToDefault",
         "codeWrapLabel", "infoText1", "infoText2", "refreshing",
         "userFullWidthLabel", "alwaysExtendedThinkingLabel",
+        "promptExpandLabel", "promptExpandDefault", "promptExpandMedium", "promptExpandLong", "promptExpandChunky", "promptExpandAll",
         "widthUnit", "densityLabel", "compactnessUnit", "advancedDensity",
         "lineHeightLabel", "paragraphSpacingLabel", "resetDensity",
         "fontSizeLabel", "resetFontSize",
@@ -369,9 +370,12 @@ const alwaysExtendedThinkingToggle = document.getElementById('alwaysExtendedThin
 const alwaysExtendedThinkingStatus = document.getElementById('alwaysExtendedThinkingStatus');
 const uiLanguageSelect = document.getElementById('uiLanguageSelect');
 const refreshNotice = document.getElementById('refreshNotice');
+const promptExpandSummary = document.getElementById('promptExpandSummary');
+const promptExpandButtons = document.querySelectorAll('.prompt-expand-segment .segment-btn');
 
 let widthUpdateTimer = null;
 let densityUpdateTimer = null;
+let currentPromptMaxLines = DEFAULTS.userPromptMaxLines;
 
 let currentWidthSetting = { ...settingsUtils.DEFAULTS.chatWidthSetting };
 let currentWidthMin = DEFAULTS.widthMin;
@@ -474,6 +478,7 @@ chrome.storage.sync.get([
     'codeWrap',
     'userFullWidth',
     'alwaysExtendedThinking',
+    'userPromptMaxLines',
     'widthMin',
     'widthMax',
     'widthPercentMin',
@@ -493,7 +498,8 @@ chrome.storage.sync.get([
         result.widthPercentMin === undefined ||
         result.widthPercentMax === undefined ||
         result.presetsByUnit === undefined ||
-        result.alwaysExtendedThinking === undefined
+        result.alwaysExtendedThinking === undefined ||
+        result.userPromptMaxLines === undefined
     );
 
     if (needsWrite) {
@@ -507,6 +513,7 @@ chrome.storage.sync.get([
             presetsByUnit: settings.presetsByUnit,
             presets: settings.presetsByUnit[settingsUtils.UNIT_PX],
             alwaysExtendedThinking: settings.alwaysExtendedThinking,
+            userPromptMaxLines: settings.userPromptMaxLines,
             messageCompactness: settings.messageCompactness,
             messageLineHeight: settings.messageLineHeight,
             messageParagraphSpacing: settings.messageParagraphSpacing,
@@ -532,6 +539,7 @@ chrome.storage.sync.get([
         updateUserFullWidthStatus(settings.userFullWidth);
         alwaysExtendedThinkingToggle.checked = settings.alwaysExtendedThinking;
         updateAlwaysExtendedThinkingStatus(settings.alwaysExtendedThinking);
+        applyPromptExpandUi(settings.userPromptMaxLines);
     });
 });
 
@@ -774,6 +782,12 @@ alwaysExtendedThinkingToggle.addEventListener('change', function () {
     updateAlwaysExtendedThinking(enabled);
 });
 
+promptExpandButtons.forEach(btn => {
+    btn.addEventListener('click', function () {
+        updatePromptMaxLines(this.dataset.lines);
+    });
+});
+
 uiLanguageSelect.addEventListener('change', function () {
     const language = settingsUtils.normalizeUiLanguage(this.value);
     chrome.storage.sync.set({ uiLanguage: language }, function () {
@@ -936,3 +950,45 @@ function updateAlwaysExtendedThinking(enabled) {
         });
     });
 }
+
+function getPromptExpandPresetName(lines) {
+    switch (String(lines)) {
+        case '15': return t('promptExpandMedium', 'Medium (15)');
+        case '40': return t('promptExpandLong', 'Long (40)');
+        case '250': return t('promptExpandChunky', 'Chunky (250)');
+        case 'all': return t('promptExpandAll', 'All (∞)');
+        case '4':
+        default: return t('promptExpandDefault', 'Default (4)');
+    }
+}
+
+function applyPromptExpandUi(lines) {
+    currentPromptMaxLines = settingsUtils.normalizePromptMaxLines(lines);
+    if (promptExpandSummary) {
+        promptExpandSummary.textContent = getPromptExpandPresetName(currentPromptMaxLines);
+    }
+    promptExpandButtons.forEach(btn => {
+        const isActive = String(btn.dataset.lines) === String(currentPromptMaxLines);
+        btn.classList.toggle('segment-active', isActive);
+    });
+}
+
+function updatePromptMaxLines(lines) {
+    const normalized = settingsUtils.normalizePromptMaxLines(lines);
+    applyPromptExpandUi(normalized);
+    chrome.storage.sync.set({ userPromptMaxLines: normalized });
+
+    chrome.tabs.query({ url: 'https://gemini.google.com/*' }, function (tabs) {
+        if (tabs.length === 0) return;
+
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, {
+                action: 'updateUserPromptMaxLines',
+                maxLines: normalized
+            }).catch(err => {
+                // Ignore error
+            });
+        });
+    });
+}
+

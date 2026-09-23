@@ -141,6 +141,18 @@ h1 {
     white-space: nowrap;
 }
 
+.card-badge {
+    margin-left: auto;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .collapse-body {
     margin-top: 10px;
     padding-top: 10px;
@@ -156,6 +168,25 @@ h1 {
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--surface-muted);
+}
+
+.prompt-expand-segment {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-muted);
+}
+
+.prompt-expand-segment .segment-btn {
+    padding: 0 1px;
+    font-size: 11px;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .segment-btn {

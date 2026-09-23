@@ -513,3 +513,48 @@ body.wider-gemini-silent-toggle gem-menu {
     visibility: hidden !important;
 }
 
+/* User prompt expansion thresholds */
+body[data-prompt-max-lines="15"] user-query-content {
+    --max-lines-for-collapse-count: 15 !important;
+}
+
+body[data-prompt-max-lines="15"] .user-query-container .query-text.collapsed {
+    -webkit-line-clamp: 15 !important;
+    max-height: calc(15 * var(--line-height, 24px)) !important;
+}
+
+body[data-prompt-max-lines="40"] user-query-content {
+    --max-lines-for-collapse-count: 40 !important;
+}
+
+body[data-prompt-max-lines="40"] .user-query-container .query-text.collapsed {
+    -webkit-line-clamp: 40 !important;
+    max-height: calc(40 * var(--line-height, 24px)) !important;
+}
+
+body[data-prompt-max-lines="250"] user-query-content {
+    --max-lines-for-collapse-count: 250 !important;
+}
+
+body[data-prompt-max-lines="250"] .user-query-container .query-text.collapsed {
+    -webkit-line-clamp: 250 !important;
+    max-height: calc(250 * var(--line-height, 24px)) !important;
+}
+
+body[data-prompt-max-lines="all"] user-query-content {
+    --max-lines-for-collapse-count: 99999 !important;
+}
+
+body[data-prompt-max-lines="all"] .user-query-container .query-text.collapsed {
+    -webkit-line-clamp: unset !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+body[data-prompt-max-lines="all"] .luminous-toggle-container,
+body[data-prompt-max-lines="all"] .luminous-expand-fade,
+body[data-prompt-max-lines="all"] button[data-test-id="luminous-expand-button"] {
+    display: none !important;
+}
+
+

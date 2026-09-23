@@ -122,6 +122,74 @@
         }
     }
 
+    function adjustPromptQueries(maxLines) {
+        if (maxLines === undefined || maxLines === null) {
+            maxLines = currentRangeSettings ? currentRangeSettings.userPromptMaxLines : 4;
+        }
+
+        const queries = document.querySelectorAll('user-query');
+        if (!queries.length) return;
+
+        queries.forEach(queryEl => {
+            const queryText = queryEl.querySelector('.query-text');
+            const expandBtn = queryEl.querySelector('button[data-test-id="luminous-expand-button"], .luminous-collapsed button.luminous-toggle-button, button[aria-label*="Expand" i]');
+            const collapseBtn = queryEl.querySelector('button[data-test-id="luminous-collapse-button"], .luminous-expanded button.luminous-toggle-button, button[aria-label*="Collapse" i]');
+
+            if (maxLines === 'all') {
+                if (expandBtn) {
+                    try {
+                        expandBtn.click();
+                    } catch (e) {
+                        // Ignore
+                    }
+                }
+                return;
+            }
+
+            const lineLimit = Number(maxLines);
+            if (!Number.isFinite(lineLimit) || lineLimit <= 0) return;
+
+            if (lineLimit === 4) {
+                return;
+            }
+
+            if (!queryText) return;
+
+            const computedLineHeight = parseFloat(getComputedStyle(queryText).lineHeight) || 24;
+            const thresholdHeight = lineLimit * computedLineHeight + 4;
+
+            if (expandBtn && queryText.scrollHeight <= thresholdHeight) {
+                try {
+                    expandBtn.click();
+                } catch (e) {
+                    // Ignore
+                }
+            } else if (collapseBtn && queryText.scrollHeight > thresholdHeight) {
+                try {
+                    collapseBtn.click();
+                } catch (e) {
+                    // Ignore
+                }
+            }
+        });
+    }
+
+    function applyUserPromptMaxLines(maxLines) {
+        const normalized = settingsUtils.normalizePromptMaxLines(maxLines);
+        if (currentRangeSettings) {
+            currentRangeSettings.userPromptMaxLines = normalized;
+        }
+
+        if (normalized === 4) {
+            document.body.removeAttribute('data-prompt-max-lines');
+        } else {
+            document.body.dataset.promptMaxLines = String(normalized);
+        }
+
+        adjustPromptQueries(normalized);
+        console.log('[Wider Gemini] Applied user prompt max lines:', normalized);
+    }
+
     let isTogglingExtendedThinking = false;
     let lastExtendedThinkingAttempt = 0;
     let extendedThinkingFailureCount = 0;
@@ -325,6 +393,7 @@
                 'codeWrap',
                 'userFullWidth',
                 'alwaysExtendedThinking',
+                'userPromptMaxLines',
                 'widthMin',
                 'widthMax',
                 'widthPercentMin',
@@ -342,6 +411,7 @@
                 applyCodeWrap(settings.codeWrap);
                 applyUserFullWidth(settings.userFullWidth);
                 applyDensitySettings(settings);
+                applyUserPromptMaxLines(settings.userPromptMaxLines);
                 if (settings.alwaysExtendedThinking) {
                     setTimeout(() => ensureExtendedThinking(), 300);
                 }
@@ -372,6 +442,9 @@
                 if (request.enabled) {
                     ensureExtendedThinking(true);
                 }
+                sendResponse({ success: true });
+            } else if (request.action === 'updateUserPromptMaxLines') {
+                applyUserPromptMaxLines(request.maxLines);
                 sendResponse({ success: true });
             } else if (request.action === 'updateDensity') {
                 applyDensitySettings(settingsUtils.normalizeStorage(request.settings || {}));
@@ -462,6 +535,12 @@
                 applySettings();
                 if (currentRangeSettings && currentRangeSettings.alwaysExtendedThinking && !isExtendedThinkingActive()) {
                     ensureExtendedThinking();
+                }
+                if (currentRangeSettings && currentRangeSettings.userPromptMaxLines !== 4) {
+                    adjustPromptQueries(currentRangeSettings.userPromptMaxLines);
+                    setTimeout(() => {
+                        adjustPromptQueries(currentRangeSettings.userPromptMaxLines);
+                    }, 150);
                 }
             }
         });

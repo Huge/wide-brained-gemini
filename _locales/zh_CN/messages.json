@@ -62,6 +62,24 @@
   "alwaysExtendedThinkingLabel": {
     "message": "默认开启深度思考"
   },
+  "promptExpandLabel": {
+    "message": "用户提问展开高度"
+  },
+  "promptExpandDefault": {
+    "message": "默认 (4)"
+  },
+  "promptExpandMedium": {
+    "message": "中等 (15)"
+  },
+  "promptExpandLong": {
+    "message": "较长 (40)"
+  },
+  "promptExpandChunky": {
+    "message": "超长 (250)"
+  },
+  "promptExpandAll": {
+    "message": "全部 (∞)"
+  },
   "statusOn": {
     "message": "开启"
   },

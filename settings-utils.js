@@ -15,6 +15,8 @@
     const DENSITY_APPLIED_MIN_PARAGRAPH_SPACING = 2;
     const FONT_SIZE_RANGE = { min: 75, max: 200, step: 5 };
     const UI_LANGUAGES = ['auto', 'en', 'zh_CN'];
+    const PROMPT_MAX_LINES_OPTIONS = [4, 15, 40, 250, 'all'];
+    const DEFAULT_PROMPT_MAX_LINES = 4;
 
     const DEFAULT_PRESETS_BY_UNIT = {
         [UNIT_PX]: [
@@ -44,6 +46,7 @@
         codeWrap: false,
         userFullWidth: false,
         alwaysExtendedThinking: true,
+        userPromptMaxLines: DEFAULT_PROMPT_MAX_LINES,
         messageCompactness: 0,
         messageLineHeight: DENSITY_DEFAULT_LINE_HEIGHT,
         messageParagraphSpacing: DENSITY_DEFAULT_PARAGRAPH_SPACING,
@@ -235,6 +238,15 @@
         return UI_LANGUAGES.indexOf(value) !== -1 ? value : DEFAULTS.uiLanguage;
     }
 
+    function normalizePromptMaxLines(value) {
+        if (value === 'all') return 'all';
+        const number = Number(value);
+        if (PROMPT_MAX_LINES_OPTIONS.includes(number)) {
+            return number;
+        }
+        return DEFAULT_PROMPT_MAX_LINES;
+    }
+
     function getWidthCssValue(setting) {
         const normalizedUnit = normalizeUnit(setting && setting.unit);
         const value = setting && typeof setting.value === 'number'
@@ -268,6 +280,7 @@
         const alwaysExtendedThinking = source.alwaysExtendedThinking !== undefined
             ? source.alwaysExtendedThinking === true
             : DEFAULTS.alwaysExtendedThinking;
+        const userPromptMaxLines = normalizePromptMaxLines(source.userPromptMaxLines);
 
         return {
             ...ranges,
@@ -278,6 +291,7 @@
             codeWrap,
             userFullWidth,
             alwaysExtendedThinking,
+            userPromptMaxLines,
             messageFontSize: normalizeFontSize(source.messageFontSize),
             uiLanguage: normalizeUiLanguage(source.uiLanguage),
             ...density
@@ -290,6 +304,9 @@
         PX_RANGE,
         PERCENT_RANGE,
         DEFAULTS,
+        PROMPT_MAX_LINES_OPTIONS,
+        DEFAULT_PROMPT_MAX_LINES,
+        normalizePromptMaxLines,
         clampNumber,
         normalizeUnit,
         normalizeStorage,

@@ -62,6 +62,24 @@
   "alwaysExtendedThinkingLabel": {
     "message": "Always Extended Thinking"
   },
+  "promptExpandLabel": {
+    "message": "User Prompt Max Lines"
+  },
+  "promptExpandDefault": {
+    "message": "Default (4)"
+  },
+  "promptExpandMedium": {
+    "message": "Medium (15)"
+  },
+  "promptExpandLong": {
+    "message": "Long (40)"
+  },
+  "promptExpandChunky": {
+    "message": "Chunky (250)"
+  },
+  "promptExpandAll": {
+    "message": "All (∞)"
+  },
   "statusOn": {
     "message": "On"
   },
